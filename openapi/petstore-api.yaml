@@ -13,5 +13,6 @@ metadata:
 spec:
   type: openapi
   lifecycle: experimental
+  owner: rprakashg-redhat
   definition:
     $text: ./petstore.oas.yaml
