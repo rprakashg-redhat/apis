@@ -5,4 +5,4 @@ metadata:
   description: A collection of all example APIs for demonstration purposes
 spec:
   targets:
-    - ./openapi/petstore-api.yaml
+    - ./openapi/petstore-api.yaml- ./openapi/spotify-api.yaml
