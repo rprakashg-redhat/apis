@@ -14,8 +14,8 @@ jobs:
     - id: add-target
       name: add a new target
       run: |        
-        NEW_API='./openapi/spotify-oas.yaml'
-        yq --style double w -i all-apis.yaml 'spec.targets[=]' "-$NEW_API"
+        NEW_API="./openapi/spotify-oas.yaml"
+        yq -i '.spec.targets += $NEW_API' all-apis.yaml
 
         git commit -m "Updated all-apis.yaml to add new api added to targets"
         git push origin ${{ github.head_ref }}
