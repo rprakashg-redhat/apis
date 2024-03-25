@@ -1,0 +1,24 @@
+name: ci
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "openapi"
+jobs:
+  add-target:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - id: add-target
+      name: add a new target
+      if: "{{ contains(github.files, '*-api.yaml') }}"
+      run: |
+        echo "adding newly added api to targets in all-apis.yaml"
+        echo "${{ contains(github.files, '*-api.yaml') }}"
+        
+        #NEW_API=
+        #yq --style double w -i all-apis.yaml 'spec.targets[=]' "-$NEW_API"
+
+        #git commit -m "Updated all-apis.yaml to add new api added to targets"
+        #git push origin main
