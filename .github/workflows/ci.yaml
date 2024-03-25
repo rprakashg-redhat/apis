@@ -35,6 +35,6 @@ jobs:
         git push origin ${{ github.event.pull_request.head.ref }}
     - name: comment PR
       run: |
-        # Use GitHub API to create a comment on the PR
-        COMMENT="Added "
+        export TARGET_PATH=./$(gh pr view $PR_NUMBER --json files --jq '.files.[] | select (.path | contains("api.yaml")) | .path')
+        gh pr comment $PR_NUMBER --body "Added $TARGET_PATH to targets in all-apis.yaml"
         
