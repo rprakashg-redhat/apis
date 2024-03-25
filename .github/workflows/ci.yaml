@@ -1,10 +1,8 @@
 name: ci
 on:
-  push:
+  pull_request:
     branches:
       - main
-    paths:
-      - "openapi"
 jobs:
   add-target:
     runs-on: ubuntu-latest
@@ -14,7 +12,7 @@ jobs:
       name: add a new target
       if: "{{ contains(github.files, '*-api.yaml') }}"
       run: |
-        echo "adding newly added api to targets in all-apis.yaml"
+        echo "Head: ${{ github.GITHUB_HEAD_REF }}"
         echo "${{ contains(github.files, '*-api.yaml') }}"
         
         #NEW_API=
