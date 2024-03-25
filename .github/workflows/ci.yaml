@@ -8,15 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref }}
+        fetch-depth: 0
     - id: add-target
       name: add a new target
-      run: |
-        echo "Head: ${{ github.GITHUB_HEAD_REF }}"
-        echo ${{ github.files }}
-        echo "${{ contains(github.files, '-api.yaml') }}"
-        
-        #NEW_API=
-        #yq --style double w -i all-apis.yaml 'spec.targets[=]' "-$NEW_API"
+      run: |        
+        NEW_API='./openapi/spotify-oas.yaml'
+        yq --style double w -i all-apis.yaml 'spec.targets[=]' "-$NEW_API"
 
-        #git commit -m "Updated all-apis.yaml to add new api added to targets"
-        #git push origin main
+        git commit -m "Updated all-apis.yaml to add new api added to targets"
+        git push origin ${{ github.head_ref }}
