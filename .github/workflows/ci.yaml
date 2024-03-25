@@ -10,7 +10,7 @@ jobs:
     - uses: actions/checkout@v4
     - id: add-target
       name: add a new target
-      if: "{{ contains(github.files, '*-api.yaml') }}"
+      if: ${{ contains(github.files, '*-api.yaml') }}
       run: |
         echo "Head: ${{ github.GITHUB_HEAD_REF }}"
         echo "${{ contains(github.files, '*-api.yaml') }}"
