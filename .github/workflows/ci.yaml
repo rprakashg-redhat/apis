@@ -7,7 +7,8 @@ on:
     branches:
       - main
 env:
-  PR_NUMBER=${{ github.event.pull_request.number }}
+  PR_NUMBER: ${{ github.event.pull_request.number }}
+  GITHUB_TOKEN: ${{ github.token }}
 jobs:
   add-target:
     runs-on: ubuntu-latest
@@ -24,18 +25,16 @@ jobs:
     - id: add-target
       name: add a new target
       run: |
-        files=$(gh pr view $PR_NUMBER --json files --jq '.files.[].path')
-
-        NEW_API="./openapi/spotify-oas.yaml"
-        yq -i '.spec.targets += $NEW_API' all-apis.yaml
+        TARGET_PATH=$(gh pr view $PR_NUMBER --json files --jq --jq '.files.[] | select (.path | contains("api.yaml")) | .path')
+        echo $TARGET_PATH
+        yq -i '.spec.targets += $TARGET_PATH' all-apis.yaml
     - name: commit changes to upstream
       run: |
         git add .          
-        git commit -m "Updated all-apis.yaml to add new api added to targets"
+        git commit -m "Updated all-apis.yaml to add new api path to targets"
         git push origin ${{ github.event.pull_request.head.ref }}
     - name: comment PR
       run: |
         # Use GitHub API to create a comment on the PR
-        
         COMMENT="Added "
-        GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+        
