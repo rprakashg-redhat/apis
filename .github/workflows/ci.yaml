@@ -1,8 +1,13 @@
 name: ci
 on:
   pull_request:
+    types:
+      - "opened"
+      - "reopened"
     branches:
       - main
+env:
+  PR_NUMBER=${{ github.event.pull_request.number }}
 jobs:
   add-target:
     runs-on: ubuntu-latest
@@ -11,11 +16,26 @@ jobs:
       with:
         ref: ${{ github.head_ref }}
         fetch-depth: 0
+    - name: setup git
+      run: |
+        # Setting up the git config.
+        git config --global user.email "rgopinat@redhat.com" # HARD CODING FOR NOW, NEED TO DETERMINE HOW TO RETRIEVE THIS FROM CURRENT USER CONTEXT
+        git config --global user.name ${{ github.actor }}
     - id: add-target
       name: add a new target
-      run: |        
+      run: |
+        files=$(gh pr view $PR_NUMBER --json files --jq '.files.[].path')
+
         NEW_API="./openapi/spotify-oas.yaml"
         yq -i '.spec.targets += $NEW_API' all-apis.yaml
-
+    - name: commit changes to upstream
+      run: |
+        git add .          
         git commit -m "Updated all-apis.yaml to add new api added to targets"
-        git push origin ${{ github.head_ref }}
+        git push origin ${{ github.event.pull_request.head.ref }}
+    - name: comment PR
+      run: |
+        # Use GitHub API to create a comment on the PR
+        
+        COMMENT="Added "
+        GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
