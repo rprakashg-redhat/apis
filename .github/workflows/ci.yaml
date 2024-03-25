@@ -25,9 +25,9 @@ jobs:
     - id: add-target
       name: add a new target
       run: |
-        TARGET_PATH=$(gh pr view $PR_NUMBER --json files --jq --jq '.files.[] | select (.path | contains("api.yaml")) | .path')
-        echo $TARGET_PATH
-        yq -i '.spec.targets += $TARGET_PATH' all-apis.yaml
+        TARGET_PATH=./$(gh pr view $PR_NUMBER --json files --jq '.files.[] | select (.path | contains("api.yaml")) | .path')
+        echo "Target Path = ${TARGET_PATH}"
+        yq -i '.spec.targets += env(TARGET_PATH)' all-apis.yaml
     - name: commit changes to upstream
       run: |
         git add .          
