@@ -6,3 +6,4 @@ metadata:
 spec:
   targets:
     - ./openapi/petstore-api.yaml
+    - ./openapi/spotify-api.yaml
